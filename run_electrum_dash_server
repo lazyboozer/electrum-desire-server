@@ -113,7 +113,7 @@ def create_config(filename=None):
 
     # set network parameters
     config.add_section('network')
-    config.set('network', 'type', 'dash_main')
+    config.set('network', 'type', 'desire_main')
 
     # try to find the config file in the default paths
     if not filename:
