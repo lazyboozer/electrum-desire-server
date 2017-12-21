@@ -1,6 +1,6 @@
 # Main network and testnet3 definitions
 
-# Dash src/chainparams.cpp
+# Desire src/chainparams.cpp
 params = {
     'desire_main': {
         'pubkey_address': 30, #L120

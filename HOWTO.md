@@ -1,18 +1,18 @@
-How to run your own Electrum Dash server
+How to run your own Electrum Desire server
 ========================================
 
 Abstract
 --------
 
 This document is an easy to follow guide to installing and running your own
-Electrum Dash server on Linux. It is structured as a series of steps you need to
+Electrum Desire server on Linux. It is structured as a series of steps you need to
 follow, ordered in the most logical way. The next two sections describe some
 conventions we use in this document and the hardware, software, and expertise
 requirements.
 
 The most up-to date version of this document is available at:
 
-    https://github.com/dashpay/electrum-dash-server/blob/master/HOWTO.md
+    https://github.com/chinafreak/electrum-desire-server/blob/master/HOWTO.md
 
 Conventions
 -----------
@@ -20,8 +20,8 @@ Conventions
 In this document, lines starting with a hash sign (#) or a dollar sign ($)
 contain commands. Commands starting with a hash should be run as root,
 commands starting with a dollar should be run as a normal user (in this
-document, we assume that user is called 'dash'). We also assume the
-dash user has sudo rights, so we use `$ sudo command` when we need to.
+document, we assume that user is called 'desire'). We also assume the
+desire user has sudo rights, so we use `$ sudo command` when we need to.
 
 Strings that are surrounded by "lower than" and "greater than" ( < and > )
 should be replaced by the user with something appropriate. For example,
@@ -54,16 +54,16 @@ Python libraries. Python 2.7 is the minimum supported version.
 
 **Hardware.** The lightest setup is a pruning server with diskspace
 requirements of about 30 GB for the Electrum database (February 2016). However note that
-you also need to run dashd and keep a copy of the full blockchain,
+you also need to run desired and keep a copy of the full blockchain,
 which is roughly 55 GB (February 2016). Ideally you have a machine with 16 GB of RAM
-and an equal amount of swap. If you have ~2 GB of RAM make sure you limit dashd 
+and an equal amount of swap. If you have ~2 GB of RAM make sure you limit desired 
 to 8 concurrent connections by disabling incoming connections. electrum-server may
 bail-out on you from time to time with less than 4 GB of RAM, so you might have to 
 monitor the process and restart it. You can tweak cache sizes in the config to an extend
 but most RAM will be used to process blocks and catch-up on initial start.
 
 CPU speed is less important than fast I/O speed. electrum-server makes uses of one core 
-only leaving spare cycles for dashd. Fast single core CPU power helps for the initial 
+only leaving spare cycles for desired. Fast single core CPU power helps for the initial 
 block chain import. Any multi-core x86 CPU with CPU Mark / PassMark > 1500 will work
 (see https://www.cpubenchmark.net/). An ideal setup in February 2016 has 16 GB+ RAM and
 SSD for good i/o speed.
@@ -71,48 +71,48 @@ SSD for good i/o speed.
 Instructions
 ------------
 
-### Step 1. Create a user for running dashd and Electrum Dash server
+### Step 1. Create a user for running desired and Electrum Desire server
 
 This step is optional, but for better security and resource separation I
-suggest you create a separate user just for running `dashd` and Electrum.
+suggest you create a separate user just for running `desired` and Electrum.
 We will also use the `~/bin` directory to keep locally installed files
 (others might want to use `/usr/local/bin` instead). We will download source
 code files to the `~/src` directory.
 
-    $ sudo adduser dash --disabled-password
+    $ sudo adduser desire --disabled-password
     $ sudo apt-get install git
-    $ sudo su - dash
+    $ sudo su - desire
     $ mkdir ~/bin ~/src
     $ echo $PATH
 
-If you don't see `/home/dash/bin` in the output, you should add this line
+If you don't see `/home/desire/bin` in the output, you should add this line
 to your `.bashrc`, `.profile`, or `.bash_profile`, then logout and relogin:
 
     PATH="$HOME/bin:$PATH"
     $ exit
 
-### Step 2. Download dashd
+### Step 2. Download desired
 
-Recommend downloading latest version directly from Dash.org
+Recommend downloading latest version directly from Desire.org
 
     $ sudo apt-get install make g++ python-leveldb libboost-all-dev libssl-dev libdb++-dev pkg-config libevent-dev
-    $ sudo su - dash
-    $ cd ~/src && wget https://www.dash.org/binaries/dash-0.12.0.57-linux64.tar.gz
-    $ sha256sum dash-0.12.0.57-linux64.tar.gz | grep 2a29b529c56d2ba41e28dfb20872861d6b48bdfe4fb327bfd2273123b38139aa
-    $ tar xfz dash-0.12.0.57-linux64.tar.gz
-    $ cd dash-0.12.0/bin
-    $ cp -a dashd dash-cli dash-tx ~/bin
+    $ sudo su - desire
+    $ cd ~/src && wget https://www.desire.org/binaries/desire-0.12.0.57-linux64.tar.gz
+    $ sha256sum desire-0.12.0.57-linux64.tar.gz | grep 2a29b529c56d2ba41e28dfb20872861d6b48bdfe4fb327bfd2273123b38139aa
+    $ tar xfz desire-0.12.0.57-linux64.tar.gz
+    $ cd desire-0.12.0/bin
+    $ cp -a desired desire-cli desire-tx ~/bin
 
-### Step 3. Configure and start dashd
+### Step 3. Configure and start desired
 
-In order to allow Electrum Dash to "talk" to `dashd`, we need to set up an RPC
-username and password for `dashd`. We will then start `dashd` and
+In order to allow Electrum Desire to "talk" to `desired`, we need to set up an RPC
+username and password for `desired`. We will then start `desired` and
 wait for it to complete downloading the blockchain.
 
-    $ mkdir ~/.dash
-    $ $EDITOR ~/.dash/dash.conf
+    $ mkdir ~/.desire
+    $ $EDITOR ~/.desire/desire.conf
 
-Write this in `dash.conf`:
+Write this in `desire.conf`:
 
     rpcuser=<rpc-username>
     rpcpassword=<rpc-password>
@@ -120,42 +120,42 @@ Write this in `dash.conf`:
     txindex=1
 
 
-If you have an existing installation of dashd and have not previously
+If you have an existing installation of desired and have not previously
 set txindex=1 you need to reindex the blockchain by running
 
-    $ dashd -reindex
+    $ desired -reindex
 
-If you already have a freshly indexed copy of the blockchain with txindex start `dashd`:
+If you already have a freshly indexed copy of the blockchain with txindex start `desired`:
 
-    $ dashd
+    $ desired
 
-Allow some time to pass for `dashd` to connect to the network and start
+Allow some time to pass for `desired` to connect to the network and start
 downloading blocks. You can check its progress by running:
 
-    $ dash-cli getblockchaininfo
+    $ desire-cli getblockchaininfo
 
-Before starting the Electrum Dash server your dashd should have processed all
+Before starting the Electrum Desire server your desired should have processed all
 blocks and caught up to the current height of the network (not just the headers).
-You should also set up your system to automatically start dashd at boot
-time, running as the 'dash' user. Check your system documentation to
+You should also set up your system to automatically start desired at boot
+time, running as the 'desire' user. Check your system documentation to
 find out the best way to do this.
 
-### Step 4. Download and install Electrum Dash server
+### Step 4. Download and install Electrum Desire server
 
 We will download the latest git snapshot for Electrum to configure and install it:
 
     $ cd ~
-    $ git clone https://github.com/dashpay/electrum-dash-server.git
-    $ cd electrum-dash-server
+    $ git clone https://github.com/desirepay/electrum-desire-server.git
+    $ cd electrum-desire-server
     $ sudo apt-get install python-setuptools
     $ sudo ./configure
     $ sudo python setup.py install
 
 See the INSTALL file for more information about the configure and install commands.
 
-### Optional Step 5: Install Electrum Dash dependencies manually
+### Optional Step 5: Install Electrum Desire dependencies manually
 
-Electrum Dash server depends on various standard Python libraries and leveldb. These will usually be
+Electrum Desire server depends on various standard Python libraries and leveldb. These will usually be
 installed by calling `python setup.py install` above. They can be also be installed with your
 package manager if you don't want to use the install routine.
 
@@ -173,7 +173,7 @@ leveldb should be at least version 1.9.0. Earlier version are believed to be bug
 
 ### Step 6. Select your limit
 
-Electrum Dash server uses leveldb to store transactions. You can choose
+Electrum Desire server uses leveldb to store transactions. You can choose
 how many spent transactions per address you want to store on the server.
 The default is 100, but there are also servers with 1000 or even 10000.
 Few addresses have more than 10000 transactions. A limit this high
@@ -198,7 +198,7 @@ It's recommended that you fetch a pre-processed leveldb from the net.
 The "configure" script above will offer you to download a database with pruning limit 100.
 
 You can fetch recent copies of electrum leveldb databases with different pruning limits
-and further instructions from the Electrum Dash full archival server foundry at a later time.
+and further instructions from the Electrum Desire full archival server foundry at a later time.
 Sadly there is no host server for these files as of yet.:
 
 
@@ -254,7 +254,7 @@ When asked for a challenge password just leave it empty and press enter.
     $ openssl x509 -req -days 1825 -in server.csr -signkey server.key -out server.crt
 
 The server.crt file is your certificate suitable for the `ssl_certfile=` parameter and
-server.key corresponds to `ssl_keyfile=` in your Electrum Dash server config.
+server.key corresponds to `ssl_keyfile=` in your Electrum Desire server config.
 
 Starting with Electrum 1.9, the client will learn and locally cache the SSL certificate
 for your server upon the first request to prevent man-in-the middle attacks for all
@@ -265,13 +265,13 @@ your server with a different server name and a new certificate.
 Therefore it's a good idea to make an offline backup copy of your certificate and key
 in case you need to restore them.
 
-### Step 9. Configure Electrum Dash server
+### Step 9. Configure Electrum Desire server
 
-Electrum Dash reads a config file (/etc/electrum-dash.conf) when starting up. This
-file includes the database setup, dashd RPC setup, and a few other
+Electrum Desire reads a config file (/etc/electrum-desire.conf) when starting up. This
+file includes the database setup, desired RPC setup, and a few other
 options.
 
-The "configure" script listed above will create a config file at /etc/electrum-dash.conf
+The "configure" script listed above will create a config file at /etc/electrum-desire.conf
 which you can edit to modify the settings.
 
 Go through the config options and set them to your liking.
@@ -279,44 +279,44 @@ If you intend to run the server publicly have a look at README-IRC.md
 
 ### Step 10. Tweak your system for running electrum
 
-Electrum Dash server currently needs quite a few file handles to use leveldb. It also requires
+Electrum Desire server currently needs quite a few file handles to use leveldb. It also requires
 file handles for each connection made to the server. It's good practice to increase the
 open files limit to 64k.
 
-The "configure" script will take care of this and ask you to create a user for running electrum-dash-server.
-If you're using the user `dash` to run electrum and have added it as shown in this document, run
+The "configure" script will take care of this and ask you to create a user for running electrum-desire-server.
+If you're using the user `desire` to run electrum and have added it as shown in this document, run
 the following code to add the limits to your /etc/security/limits.conf:
 
-     echo "dash hard nofile 65536" >> /etc/security/limits.conf
-     echo "dash soft nofile 65536" >> /etc/security/limits.conf
+     echo "desire hard nofile 65536" >> /etc/security/limits.conf
+     echo "desire soft nofile 65536" >> /etc/security/limits.conf
 
 If you are on Debian > 8.0 Jessie or another distribution based on it, you also need to add these lines in /etc/pam.d/common-session and /etc/pam.d/common-session-noninteractive otherwise the limits in /etc/security/limits.conf will not work:
 
     echo "session required pam_limits.so" >> /etc/pam.d/common-session
     echo "session required pam_limits.so" >> /etc/pam.d/common-session-noninteractive
 
-Check if the limits are changed either by logging with the user configured to run Electrum Dash server as. Example:
+Check if the limits are changed either by logging with the user configured to run Electrum Desire server as. Example:
 
-    su - dash
+    su - desire
     ulimit -n
 
 Or if you use sudo and the user is added to sudoers group:
 
-    sudo -u dash -i ulimit -n
+    sudo -u desire -i ulimit -n
 
 
 Two more things for you to consider:
 
 1. To increase privacy of transactions going through your server
-   you may want to close dashd for incoming connections and connect outbound only. Most servers do run
+   you may want to close desired for incoming connections and connect outbound only. Most servers do run
    full nodes with open incoming connections though.
 
-2. Consider restarting dashd (together with electrum-server) on a weekly basis to clear out unconfirmed
+2. Consider restarting desired (together with electrum-server) on a weekly basis to clear out unconfirmed
    transactions from the local the memory pool which did not propagate over the network.
 
-### Step 11. (Finally!) Run Electrum Dash server
+### Step 11. (Finally!) Run Electrum Desire server
 
-The magic moment has come: you can now start your Electrum Dash server as root (it will su to your unprivileged user):
+The magic moment has come: you can now start your Electrum Desire server as root (it will su to your unprivileged user):
 
     # electrum-server start
 
@@ -325,7 +325,7 @@ unprivileged user.
 
 You should see this in the log file:
 
-    starting Electrum Dash server
+    starting Electrum Desire server
 
 If your blockchain database is out of date Electrum Server will start updating it. You will see something similar to this in the log file:
 
@@ -333,7 +333,7 @@ If your blockchain database is out of date Electrum Server will start updating i
     
 The important pieces to you are at the end. In this example, the server has to calculate 240 more blocks, with an ETA of 11.5 hours. Multiple entries will appear below this one as the server catches back up to the latest block. During this time the server will not accept incoming connections from clients or connect to the IRC channel.
 
-If you want to stop Electrum Dash server, use the 'stop' command:
+If you want to stop Electrum Desire server, use the 'stop' command:
 
     # electrum-server stop
 
@@ -345,7 +345,7 @@ safely whenever your machine is rebooted.
     # ln -s `which electrum-server` /etc/init.d/electrum-server
     # update-rc.d electrum-server defaults
 
-### Step 12. Test the Electrum Dash server
+### Step 12. Test the Electrum Desire server
 
 We will assume you have a working Electrum client, a wallet, and some
 transaction history. You should start the client and click on the green
@@ -353,10 +353,10 @@ checkmark (last button on the right of the status bar) to open the Server
 selection window. If your server is public, you should see it in the list
 and you can select it. If you server is private, you need to enter its IP
 or hostname and the port. Press 'Ok' and the client will disconnect from the
-current server and connect to your new Electrum Dash server. You should see your
+current server and connect to your new Electrum Desire server. You should see your
 addresses and transactions history. You can see the number of blocks and
 response time in the server selection window. You should send/receive some
-dashs to confirm that everything is working properly.
+desires to confirm that everything is working properly.
 
 ### Step 13. Join us on IRC, subscribe to the server thread
 
@@ -364,7 +364,7 @@ Say hi to the dev crew, other server operators, and fans on
 irc.freenode.net #electrum and we'll try to congratulate you
 on supporting the community by running an Electrum node.
 
-If you're operating a public Electrum Dash server please subscribe
+If you're operating a public Electrum Desire server please subscribe
 to or regularly check the following thread:
 https://bitcointalk.org/index.php?topic=85475.0
 It'll contain announcements about important updates to Electrum
