@@ -613,7 +613,7 @@ class BlockchainProcessor(Processor):
         for txid in block['tx']:
             rawtxreq.append({
                 "method": "getrawtransaction",
-                "params": (txid,),
+                "params": (txid,"1"),
                 "id": i,
             })
             i += 1
