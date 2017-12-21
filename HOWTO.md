@@ -145,7 +145,7 @@ find out the best way to do this.
 We will download the latest git snapshot for Electrum to configure and install it:
 
     $ cd ~
-    $ git clone https://github.com/desirepay/electrum-desire-server.git
+    $ git clone https://github.com/Chinafreak/electrum-desire-server.git
     $ cd electrum-desire-server
     $ sudo apt-get install python-setuptools
     $ sudo ./configure
