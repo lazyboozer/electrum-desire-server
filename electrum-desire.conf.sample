@@ -37,7 +37,7 @@ pruning_limit = 100
 
 [desired]
 desired_host = localhost
-desired_port = 8332
+desired_port = 9998
 # user and password from desire.conf
 desired_user =
 desired_password =
