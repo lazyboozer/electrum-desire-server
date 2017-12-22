@@ -1,3 +1,7 @@
+### HOW TO (own how to by Chinafreak)
+
+Tested on Ubuntu 17.04 Server. Other linux server (debian, etc.) or even windows/mac server might be a little different.
+
 ## Create a user for running desired and Electrum Desire server
 
 This step is optional, but for better security and resource separation I
@@ -42,8 +46,8 @@ to your `.bashrc`, `.profile`, or `.bash_profile`, then logout and relogin:
     $ ln -s /usr/local/BerkeleyDB.4.8/lib/libdb-4.8.so /usr/lib/libdb-4.8.so
 
 
-## Building Desire Wallet
-I decided to build directly instead downloading direct from website (http://desire-crypto.com) because I couldn't run compiled linux build on ubuntu server. So I'll compiled it. 
+## (Optimal) Building Desire Wallet 
+I decided to build directly instead downloading direct from website (http://desire-crypto.com) because I couldn't run compiled linux build on ubuntu server. So I'll compiled it. If you can run compiled wallet on your server, then skip this part.
 
     $ sudo su - desire
     $ cd ~/src
@@ -90,3 +94,5 @@ Before starting the Electrum Desire server your desired should have processed al
     $ sudo easy_install jsonrpclib irc plyvel x11_hash
 
 ## Download and install Electrum Desire server
+
+Coming soon...
