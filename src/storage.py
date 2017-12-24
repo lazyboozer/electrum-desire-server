@@ -480,8 +480,8 @@ class Storage(object):
     def get_path(self, target, new=False):
 
         x = self.db_utxo.get(target)
-        if not new and x is None:
-            raise BaseException('key not in tree', target.encode('hex'))
+        # if not new and x is None:
+            # raise BaseException('key not in tree', target.encode('hex'))
 
         if new and x is not None:
             # raise BaseException('key already in tree', target.encode('hex'))

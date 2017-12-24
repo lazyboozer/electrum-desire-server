@@ -661,7 +661,7 @@ class BlockchainProcessor(Processor):
 
             self.set_time()
 
-            revert = (random.randint(1, 100) == 1) if self.test_reorgs and self.storage.height>100 else False
+            revert = False
 
             # not done..
             self.up_to_date = False
